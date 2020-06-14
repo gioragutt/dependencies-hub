@@ -11,7 +11,7 @@ sidebar_label: DH Database
 Represents a module that (probably) represents a service, has a `build.gradle`.
 
 ```cypher
-CREATE (s:Service { ... })
+CREATE (s:Service { name: "string" })
 ```
 
 ### Library
@@ -19,7 +19,7 @@ CREATE (s:Service { ... })
 Represents a module that is a library, that can be depended on by other services or libraries.
 
 ```cypher
-CREATE (l:Library { ... })
+CREATE (l:Library { name: "string" })
 ```
 
 ### ServiceVersion
@@ -27,7 +27,7 @@ CREATE (l:Library { ... })
 Represents a versioned snapshot of a service
 
 ```cypher
-CREATE (sv:ServiceVersion { ... })
+CREATE (sv:ServiceVersion { version: "string" })
 ```
 
 ### LibraryVersion
@@ -35,7 +35,7 @@ CREATE (sv:ServiceVersion { ... })
 Represents a certain version of a library that may be depended upon by other services or libraries.
 
 ```cypher
-CREATE (lv:LibraryVersion { ... })
+CREATE (lv:LibraryVersion { version: "string" })
 ```
 
 ### Repository
