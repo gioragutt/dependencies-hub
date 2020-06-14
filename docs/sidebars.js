@@ -1,3 +1,5 @@
+const entriesIn = (folder, ids) => ids.map(id => `${folder}/${id}`);
+
 module.exports = {
   docs: {
     'Dependencies Hub': ['introduction', 'architecture', 'motivation'],
@@ -5,7 +7,7 @@ module.exports = {
       {
         type: 'category',
         label: 'Database',
-        items: ['database/neo4j', 'database/dh'],
+        items: entriesIn('database', ['neo4j', 'dh', 'sample']),
       },
     ],
     Meta: ['styleguide']
