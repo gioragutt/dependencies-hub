@@ -1,7 +1,13 @@
 module.exports = {
-  someSidebar: {
+  docs: {
     'Dependencies Hub': ['introduction', 'architecture', 'motivation'],
-    Design: ['database'],
+    Design: [
+      {
+        type: 'category',
+        label: 'Database',
+        items: ['database/neo4j', 'database/dh'],
+      },
+    ],
     Meta: ['styleguide']
   },
 };
