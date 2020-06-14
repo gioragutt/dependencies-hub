@@ -1,6 +1,6 @@
 module.exports = {
-  title: 'My Site',
-  tagline: 'The tagline of my site',
+  title: 'Dependencies Hub',
+  tagline: 'Depend on me to handle your dependencies 👌🏻',
   url: 'https://gioragutt.github.io',
   baseUrl: '/dependencies-hub/',
   favicon: 'img/favicon.ico',
