@@ -81,11 +81,11 @@ CREATE (lv)-[:VERSION_OF]->(l)
 Between [Service](#service) and [Repository](#repository)
 
 ```cypher
-CREATE (s)-[:RESIDES_IN]->(r)
+CREATE (s)-[:RESIDES_IN { path: "/path/to/module" }]->(r)
 ```
 
 Between [Library](#library) and [Repository](#repository)
 
 ```cypher
-CREATE (l)-[:RESIDES_IN]->(r)
+CREATE (l)-[:RESIDES_IN { path: "/path/to/module" }]->(r)
 ```
