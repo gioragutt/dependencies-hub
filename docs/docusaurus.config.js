@@ -26,7 +26,7 @@ module.exports = {
           position: 'left',
         },
         {
-          href: 'https://github.com/facebook/docusaurus',
+          href: 'https://github.com/gioragutt/dependencies-hub',
           label: 'GitHub',
           position: 'right',
         },
@@ -79,7 +79,7 @@ module.exports = {
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
+      copyright: `Copyright © ${new Date().getFullYear()} Giora Guttsait, Inc. Built with Docusaurus 🦖❤️.`,
     },
   },
   presets: [
@@ -91,14 +91,12 @@ module.exports = {
           homePageId: 'introduction',
           sidebarPath: require.resolve('./sidebars.js'),
           // Please change this to your repo.
-          editUrl:
-            'https://github.com/dependencies-hub/edit/master/docs/',
+          editUrl: 'https://github.com/gioragutt/dependencies-hub/edit/master/docs/',
         },
         blog: {
           showReadingTime: true,
           // Please change this to your repo.
-          editUrl:
-            'https://github.com/gioragutt/dependencies-hub/edit/master/docs/blog/',
+          editUrl: 'https://github.com/gioragutt/dependencies-hub/edit/master/docs/',
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
