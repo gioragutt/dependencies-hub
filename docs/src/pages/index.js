@@ -54,11 +54,14 @@ function Feature({imageUrl, title, description}) {
   );
 }
 
+// To help differentiate between prod tab (on github pages) and local
+const DEV_MODE_MARK = process.env.NODE_ENV === 'development' ? '(D) ' : '';
+
 function Home() {
   const { siteConfig = {} } = useDocusaurusContext();
   return (
     <Layout
-      title={`${siteConfig.title}`}
+      title={`${DEV_MODE_MARK}${siteConfig.title}`}
       description="Just a place for me to document the thought process behind the Dependencies Hub design">
       <header className={classnames('hero hero--primary', styles.heroBanner)}>
         <div className="container">
