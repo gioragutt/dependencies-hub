@@ -1,14 +1,24 @@
-const entriesIn = (folder, ids) => ids.map(id => `${folder}/${id}`);
+function category({ label, path, items }) {
+  path = path || label.toLowerCase();
+  return {
+    type: 'category',
+    label,
+    items: items.map(id => `${path}/${id}`)
+  };
+}
 
 module.exports = {
   docs: {
     'Dependencies Hub': ['introduction', 'architecture', 'motivation'],
     Design: [
-      {
-        type: 'category',
+      category({
         label: 'Database',
-        items: entriesIn('database', ['neo4j', 'dh', 'sample']),
-      },
+        items: ['neo4j', 'dh', 'sample'],
+      }),
+      category({
+        label: 'Scraping',
+        items: ['tfs', 'artifactory', 'process'],
+      }),
     ],
     Meta: ['styleguide']
   },
