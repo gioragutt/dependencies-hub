@@ -34,5 +34,12 @@ Each dependency has the following properties:
 
 The `type` property will be used in the [`:DEPENDS_ON`](../database/dh.md#depends_on) relations.
 
+### `settings.gradle`
+
+Currently, the only property exposed by `settings.gradle` in (most) modules is `rootProject.name`.
+Some modules have several `include project` statements, in cases where it's the root of a multi-module project.
+
+The `rootProject.name` property relates to the [`artifactId`][libraryproperties] of the library, or the name of the service.
+
 [libraryproperties]: ./artifactory.md#libraryproperties
 [gradle configuration name]: https://docs.gradle.org/current/userguide/java_library_plugin.html#sec:java_library_configurations_graph
