@@ -24,7 +24,9 @@ docker run \
     neo4j:4.0.5
 ```
 
-Go to [http://localhost:7474/browser/](http://localhost:7474/browser/)
+Go to [http://localhost:7474/browser/](http://localhost:7474/browser/)ץ
+
+More information about the neo4j image can be found [here](https://hub.docker.com/_/neo4j).
 
 ## Examples
 
