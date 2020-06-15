@@ -27,16 +27,28 @@ CREATE (l:Library { name: "string" })
 Represents a versioned snapshot of a service
 
 ```cypher
-CREATE (sv:ServiceVersion { version: "string" })
+CREATE (sv:ServiceVersion {
+  version: "0.1.0",
+  gitVersion: "master",
+  gitVersionType: "branch"
+})
 ```
+
+The `gitVersion` and `gitVersionType` refer to the `VersionDescriptor` params of the [`TFS Git Rest Api`][tfs-rest-api-params]
 
 ### LibraryVersion
 
 Represents a certain version of a library that may be depended upon by other services or libraries.
 
 ```cypher
-CREATE (lv:LibraryVersion { version: "string" })
+CREATE (lv:LibraryVersion {
+  version: "0.1.0",
+  gitVersion: "master",
+  gitVersionType: "branch"
+})
 ```
+
+The `gitVersion` and `gitVersionType` refer to the `VersionDescriptor` params of the [`TFS Git Rest Api`][tfs-rest-api-params]
 
 ### Repository
 
@@ -53,13 +65,17 @@ CREATE (r:Repository { ... })
 Between [ServiceVersion](#serviceversion) and [LibraryVersion](#libraryversion)
 
 ```cypher
-CREATE (sv)-[:DEPENDS_ON]->(lv)
+CREATE (sv)-[:DEPENDS_ON {
+  type: "compile/implementation/api/etc..."
+}]->(lv)
 ```
 
 Between [LibraryVersion](#libraryversion) and [LibraryVersion](#libraryversion)
 
 ```cypher
-CREATE (lv1)-[:DEPENDS_ON]->(lv2)
+CREATE (lv1)-[:DEPENDS_ON {
+  type: "compile/implementation/api/etc..."
+}]->(lv2)
 ```
 
 ### VERSION_OF
@@ -81,11 +97,17 @@ CREATE (lv)-[:VERSION_OF]->(l)
 Between [Service](#service) and [Repository](#repository)
 
 ```cypher
-CREATE (s)-[:RESIDES_IN { path: "/path/to/module" }]->(r)
+CREATE (s)-[:RESIDES_IN { 
+  path: "/path/to/module"
+}]->(r)
 ```
 
 Between [Library](#library) and [Repository](#repository)
 
 ```cypher
-CREATE (l)-[:RESIDES_IN { path: "/path/to/module" }]->(r)
+CREATE (l)-[:RESIDES_IN {
+  path: "/path/to/module"
+}]->(r)
 ```
+
+[tfs-rest-api-params]: https://docs.microsoft.com/en-us/rest/api/azure/devops/git/items/get?view=azure-devops-rest-5.0#uri-parameters
