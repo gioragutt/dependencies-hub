@@ -45,3 +45,30 @@ This can be triggered nightly, or even more frequently, depending on how lengthy
 Basically it means running the `Single Commit Scrape` for many many commits.
 
 ## Flow of a scrape
+
+So consider the scrape is a `Single Commit Scrape`, as it seems that it's the building block of scrapes.
+
+We start by using the `TFS Api` to find the [files we're interested in](./tfs#files-that-were-interested-in-scraping) from a repository.
+
+From there, we analyze what modules we have, what type each module is (library or service).
+
+For each module, we go over it's dependencies, and create:
+1. `LibraryVersion` nodes
+1. `:DEPENDS_ON` relations
+1. `Library` nodes
+1. `:VERSION_OF` relations
+
+It could be that when we scrape a module, the libraries it depends on have not yet been saved,
+be it the specific version of the library, or maybe it's the first time we encounter the library and it's not saved at all (does not have a `Library` node).
+
+If we later scrape the repository that contains that library, what should happen is that it's nodes should just be updated with more properties and relations, but there shouldn't be neither a conflict or duplicate nodes.
+
+### Differentiating a library from service
+
+For existing libraries that would be easy - scrape `Artifactory` and check if the library is already there.
+
+For new libraries, that do not yet have a published version, it gets a little bit trickier.
+
+:::note
+_**TODO**: Find out more attributes that differentiate between libraries and services_
+:::

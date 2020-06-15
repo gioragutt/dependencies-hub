@@ -41,5 +41,9 @@ Some modules have several `include project` statements, in cases where it's the 
 
 The `rootProject.name` property relates to the [`artifactId`][libraryproperties] of the library, or the name of the service.
 
+### `README.md`
+
+To show those sweet a$$ docs in the website 💸
+
 [libraryproperties]: ./artifactory.md#libraryproperties
 [gradle configuration name]: https://docs.gradle.org/current/userguide/java_library_plugin.html#sec:java_library_configurations_graph
