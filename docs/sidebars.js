@@ -17,7 +17,7 @@ module.exports = {
       }),
       category({
         label: 'Scraping',
-        items: ['tfs', 'artifactory', 'process', 'possible-caveats'],
+        items: ['tfs', 'artifactory', 'process', 'configuration', 'possible-caveats'],
       }),
     ],
     Meta: ['styleguide']

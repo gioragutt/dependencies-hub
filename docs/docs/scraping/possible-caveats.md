@@ -3,8 +3,9 @@ id: possible-caveats
 title: Possible Caveats
 sidebar_label: Possible Caveats
 ---
-
+:::note
 What happens when we push the code of a library, but it is still not published to artifactory? (F.E new library WIP commits)
+:::
 
 Do we have a way to know if a module is a library, other than finding it in artifactory?
 
@@ -14,11 +15,19 @@ And if we do, what would be the process of updating the node?
 
 ---
 
+:::note
 How do we handle `compile project(':...')` cases?
+:::
+
+We can find the references project by search for a module with the same `rootProject.name` as the references module.
 
 ---
 
-How do we handle scraping errors? there have beeen several modules where their `build.gradle` was pretty shitty, and contained stuff in the `dependencies` block which it should not have.
+:::note
+How do we handle scraping errors? 
+:::
+
+There have beeen several modules where their `build.gradle` was pretty shitty, and contained stuff in the `dependencies` block which it should not have.
 
 This caused the parsed `build.gradle` object to contain weird stuff. We need a mechanism for handling parsing or validation errors.
 
