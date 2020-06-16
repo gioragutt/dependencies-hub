@@ -15,3 +15,11 @@ And if we do, what would be the process of updating the node?
 ---
 
 How do we handle `compile project(':...')` cases?
+
+---
+
+How do we handle scraping errors? there have beeen several modules where their `build.gradle` was pretty shitty, and contained stuff in the `dependencies` block which it should not have.
+
+This caused the parsed `build.gradle` object to contain weird stuff. We need a mechanism for handling parsing or validation errors.
+
+_Possible Solution:_ when such an event occurs, send out an event (probably means we'll have a MQ) which would be registed in a database. There'll probably be a "backoffice" part of the service that will allow users to see such errors, and retrigger scrapes after they failed. Kinda sounds like `jenkins` but... nope 🙃.
