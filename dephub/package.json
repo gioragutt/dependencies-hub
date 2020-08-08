@@ -27,7 +27,8 @@
   },
   "private": true,
   "dependencies": {
-    "express": "4.17.1"
+    "express": "4.17.1",
+    "neo4j-driver": "^4.1.1"
   },
   "devDependencies": {
     "@nrwl/express": "^10.0.10",
