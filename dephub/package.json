@@ -26,7 +26,9 @@
     "help": "nx help"
   },
   "private": true,
-  "dependencies": {},
+  "dependencies": {
+    "express": "4.17.1"
+  },
   "devDependencies": {
     "@nrwl/express": "^10.0.10",
     "@nrwl/workspace": "10.0.10",
@@ -36,6 +38,16 @@
     "prettier": "2.0.4",
     "ts-node": "~7.0.0",
     "tslint": "~6.0.0",
-    "typescript": "~3.9.3"
+    "typescript": "~3.9.3",
+    "@nrwl/jest": "10.0.10",
+    "jest": "25.2.3",
+    "@types/jest": "25.1.4",
+    "ts-jest": "25.2.1",
+    "@nrwl/node": "10.0.10",
+    "@types/express": "4.17.0",
+    "@nrwl/eslint-plugin-nx": "10.0.10",
+    "@typescript-eslint/parser": "2.19.2",
+    "@typescript-eslint/eslint-plugin": "2.19.2",
+    "eslint-config-prettier": "6.0.0"
   }
 }
