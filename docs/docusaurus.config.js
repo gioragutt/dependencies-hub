@@ -40,11 +40,7 @@ module.exports = {
           items: [
             {
               label: 'Style Guide',
-              to: 'docs/',
-            },
-            {
-              label: 'Second Doc',
-              to: 'docs/doc2/',
+              to: 'docs/styleguide',
             },
           ],
         },
