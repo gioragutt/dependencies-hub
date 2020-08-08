@@ -6,42 +6,24 @@ sidebar_label: DH Database
 
 ## Nodes
 
-### Service
+### Module
 
-Represents a module that (probably) represents a service, has a `build.gradle`.
+Represents a module that can be either a service or a library.
+
+Has a `build.gradle` file
 
 ```cypher
-CREATE (s:Service { name: "string" })
+CREATE (m:Module { name: "string" })
 ```
 
-### Library
+### ModuleVersion
 
-Represents a module that is a library, that can be depended on by other services or libraries.
-
-```cypher
-CREATE (l:Library { name: "string" })
-```
-
-### ServiceVersion
-
-Represents a versioned snapshot of a service
+Represents a version of a module.
+* For libraries, this represents a version of the library itself.
+* For services, this represents a docker image of the service
 
 ```cypher
-CREATE (sv:ServiceVersion {
-  version: "0.1.0",
-  gitVersion: "master",
-  gitVersionType: "branch"
-})
-```
-
-The `gitVersion` and `gitVersionType` refer to the `VersionDescriptor` params of the [`TFS Git Rest Api`][tfs-rest-api-params]
-
-### LibraryVersion
-
-Represents a certain version of a library that may be depended upon by other services or libraries.
-
-```cypher
-CREATE (lv:LibraryVersion {
+CREATE (mv:ModuleVersion {
   version: "0.1.0",
   gitVersion: "master",
   gitVersionType: "branch"
@@ -60,52 +42,34 @@ CREATE (r:Repository { ... })
 
 ## Relations
 
-### DEPENDS_ON
+### DEPENDS_ON_LIBRARY
 
-Between [ServiceVersion](#serviceversion) and [LibraryVersion](#libraryversion)
-
-```cypher
-CREATE (sv)-[:DEPENDS_ON {
-  type: "compile/implementation/api/etc..."
-}]->(lv)
-```
-
-Between [LibraryVersion](#libraryversion) and [LibraryVersion](#libraryversion)
+Between [ModuleVersion](#moduleversion) and [ModuleVersion](#moduleversion).
 
 ```cypher
-CREATE (lv1)-[:DEPENDS_ON {
+CREATE (mv1)-[:DEPENDS_ON_LIBRARY {
   type: "compile/implementation/api/etc..."
-}]->(lv2)
+}]->(mv2)
 ```
+
+:::info
+Modules that have version that have `:DEPENDS_ON_LIBRARY` relations connected to them are libraries.
+:::
 
 ### VERSION_OF
 
-Between [ServiceVersion](#serviceversion) and [Service](#service)
+Between [ModuleVersion](#moduleversion) and [Module](#module)
 
 ```cypher
-CREATE (sv)-[:VERSION_OF]->(s)
-```
-
-Between [LibraryVersion](#libraryversion) and [Library](#library)
-
-```cypher
-CREATE (lv)-[:VERSION_OF]->(l)
+CREATE (mv)-[:VERSION_OF]->(m)
 ```
 
 ### RESIDES_IN
 
-Between [Service](#service) and [Repository](#repository)
+Between [Module](#module) and [Repository](#repository)
 
 ```cypher
-CREATE (s)-[:RESIDES_IN { 
-  path: "/path/to/module"
-}]->(r)
-```
-
-Between [Library](#library) and [Repository](#repository)
-
-```cypher
-CREATE (l)-[:RESIDES_IN {
+CREATE (m)-[:RESIDES_IN { 
   path: "/path/to/module"
 }]->(r)
 ```

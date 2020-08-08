@@ -7,25 +7,24 @@ sidebar_label: Sample Data
 Here is a sample cypher query which you can use to populate your database:
 
 ```cypher
-
 CREATE
-  (dhs:Service { name: "Dependencies Hub Service" }),
-  (dhrest:Service { name: "Dependencies Hub Rest Api" }),
+  (dhs:Module { name: "dh-service" }),
+  (dhrest:Module { name: "dh-rest" }),
 
-  (dhschemas:Library { name: "Dependencies Hub Schemas" }),
-  (n4j:Library { name: "neo4j" }),
-  (express:Library { name: "express" }),
-  (tfsapi:Library { name: "tfs-api" }),
-  (nodefetch:Library { name: "node-fetch" }),
+  (dhschemas:Module { name: "dh-schemas" }),
+  (n4j:Module { name: "neo4j" }),
+  (express:Module { name: "express" }),
+  (tfsapi:Module { name: "tfs-api" }),
+  (nodefetch:Module { name: "node-fetch" }),
 
-  (dhs1:ServiceVersion { version: "1.0.0" }),
-  (dhrest1:ServiceVersion { version: "1.0.0" }),
+  (dhs1:ModuleVersion { version: "1.0.0", name: "dh-service" }),
+  (dhrest1:ModuleVersion { version: "1.0.0", name: "dh-rest" }),
   
-  (dhschemas1:LibraryVersion { version: "1.0.0" }),
-  (n4j1:LibraryVersion { version: "1.0.0" }),
-  (express1:LibraryVersion { version: "1.0.0" }),
-  (tfsapi1:LibraryVersion { version: "1.0.0" }),
-  (nodefetch1:LibraryVersion { version: "1.0.0" }),
+  (dhschemas1:ModuleVersion { version: "1.0.0", name: "dh-schemas" }),
+  (n4j1:ModuleVersion { version: "1.0.0", name: "neo4j" }),
+  (express1:ModuleVersion { version: "1.0.0", name: "express" }),
+  (tfsapi1:ModuleVersion { version: "1.0.0", name: "tfs-api" }),
+  (nodefetch1:ModuleVersion { version: "1.0.0", name: "node-fetch" }),
   
   (dhrepo:Repository { name: "DependenciesHub" }),
 
@@ -42,17 +41,17 @@ CREATE
   (dhrest)-[:RESIDES_IN { path: "/rest" }]->(dhrepo),
   (dhschemas)-[:RESIDES_IN { path: "/schemas" }]->(dhrepo),
 
-  (dhs1)-[:DEPENDS_ON]->(dhschemas1),
-  (dhs1)-[:DEPENDS_ON]->(n4j1),
-  (dhs1)-[:DEPENDS_ON]->(tfsapi1),
-  (dhs1)-[:DEPENDS_ON]->(nodefetch1),
+  (dhs1)-[:DEPENDS_ON_LIBRARY]->(dhschemas1),
+  (dhs1)-[:DEPENDS_ON_LIBRARY]->(n4j1),
+  (dhs1)-[:DEPENDS_ON_LIBRARY]->(tfsapi1),
+  (dhs1)-[:DEPENDS_ON_LIBRARY]->(nodefetch1),
 
-  (dhrest1)-[:DEPENDS_ON]->(dhschemas1),
-  (dhrest1)-[:DEPENDS_ON]->(n4j1),
-  (dhrest1)-[:DEPENDS_ON]->(express1),
+  (dhrest1)-[:DEPENDS_ON_LIBRARY]->(dhschemas1),
+  (dhrest1)-[:DEPENDS_ON_LIBRARY]->(n4j1),
+  (dhrest1)-[:DEPENDS_ON_LIBRARY]->(express1),
 
   // Just to show that libraries can depend on libraries
-  (dhschemas1)-[:DEPENDS_ON]->(n4j1),
+  (dhschemas1)-[:DEPENDS_ON_LIBRARY]->(n4j1)
 ```
 
 ## Queries
@@ -60,22 +59,22 @@ CREATE
 * Find all services and libraries that depend on the `neo4j` library
 
 ```cypher
-MATCH (l:Library)<-[:VERSION_OF]-(:LibraryVersion)<-[:DEPENDS_ON]-()-[:VERSION_OF]->(s)
-WHERE l.name = "neo4j"
+MATCH (lib:Module)<-[:VERSION_OF]-(:ModuleVersion)<-[:DEPENDS_ON_LIBRARY]-()-[:VERSION_OF]->(s)
+WHERE lib.name = "neo4j"
 RETURN s;
 ```
 
 * Find all dependencies on libraries
 
 ```cypher
-MATCH (l:Library)<-[:VERSION_OF]-(:LibraryVersion)<-[:DEPENDS_ON]-()-[:VERSION_OF]->(s)
-RETURN s, l;
+MATCH (lib:Module)<-[:VERSION_OF]-(:ModuleVersion)<-[:DEPENDS_ON_LIBRARY]-()-[:VERSION_OF]->(s)
+RETURN s, lib;
 ```
 
 * Find all services and the libraries they depend on
 
 ```cypher
-MATCH (l:Library)<-[:VERSION_OF]-(:LibraryVersion)<-[:DEPENDS_ON]-(:ServiceVersion)-[:VERSION_OF]->(s:Service)
+MATCH (lib:Module)<-[:VERSION_OF]-(:ModuleVersion)<-[:DEPENDS_ON_LIBRARY]-(:ModuleVersion)-[:VERSION_OF]->(s:Service)
 RETURN s, l;
 ```
 
@@ -83,9 +82,22 @@ RETURN s, l;
 
 ```cypher
 MATCH 
-	(r:Repository)<-[rel:RESIDES_IN]-(s) 
+	(r:Repository)<-[rel:RESIDES_IN]-(m) 
 RETURN 
-	r.name as Repository, s.name as Module, rel.path as Path
+	r.name as Repository, m.name as Module, rel.path as Path
+```
+
+* List all modules, specifying if each module is a service or library
+
+```cypher
+MATCH
+  (m:Module)
+OPTIONAL MATCH
+  (dep:Module)<-[:VERSION_OF]-(:ModuleVersion)-[:DEPENDS_ON_LIBRARY]->(:ModuleVersion)-[:VERSION_OF]->(m)
+WITH 
+  m, count(dep) > 0 as isLibrary
+RETURN 
+  m.name, isLibrary
 ```
 
 ## Utils
