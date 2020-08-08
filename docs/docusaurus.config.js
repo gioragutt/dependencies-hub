@@ -13,7 +13,7 @@ module.exports = {
         alt: 'Dependencies Hub Logo',
         src: 'img/logo.svg',
       },
-      links: [
+      items: [
         {
           to: 'docs/',
           activeBasePath: 'docs',
@@ -34,7 +34,7 @@ module.exports = {
     },
     footer: {
       style: 'dark',
-      links: [
+      items: [
         {
           title: 'Docs',
           items: [
