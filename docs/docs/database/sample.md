@@ -59,8 +59,7 @@ CREATE
 * Find all services and libraries that depend on the `neo4j` library
 
 ```cypher
-MATCH (lib:Module)<-[:VERSION_OF]-(:ModuleVersion)<-[:DEPENDS_ON_LIBRARY]-()-[:VERSION_OF]->(s)
-WHERE lib.name = "neo4j"
+MATCH (lib:Module {name: "neo4j})<-[:VERSION_OF]-(:ModuleVersion)<-[:DEPENDS_ON_LIBRARY]-()-[:VERSION_OF]->(s)
 RETURN s;
 ```
 
@@ -68,14 +67,7 @@ RETURN s;
 
 ```cypher
 MATCH (lib:Module)<-[:VERSION_OF]-(:ModuleVersion)<-[:DEPENDS_ON_LIBRARY]-()-[:VERSION_OF]->(s)
-RETURN s, lib;
-```
-
-* Find all services and the libraries they depend on
-
-```cypher
-MATCH (lib:Module)<-[:VERSION_OF]-(:ModuleVersion)<-[:DEPENDS_ON_LIBRARY]-(:ModuleVersion)-[:VERSION_OF]->(s:Service)
-RETURN s, l;
+RETURN s.name, collect(lib.name);
 ```
 
 * List all repositories, and services and libraries that reside inside them
@@ -84,7 +76,7 @@ RETURN s, l;
 MATCH 
 	(r:Repository)<-[rel:RESIDES_IN]-(m) 
 RETURN 
-	r.name as Repository, m.name as Module, rel.path as Path
+	r.name as repo, rel.path as path, m.name as module
 ```
 
 * List all modules, specifying if each module is a service or library
@@ -98,6 +90,14 @@ WITH
   m, count(dep) > 0 as isLibrary
 RETURN 
   m.name, isLibrary
+```
+
+* List all modules and their repositories
+
+```cypher
+MATCH (m:Module)
+OPTIONAL MATCH (m)-[rel:RESIDES_IN]->(repo:Repository)
+RETURN m.name as module, repo.name as repo, rel.path as path
 ```
 
 ## Utils
