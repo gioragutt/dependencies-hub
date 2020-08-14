@@ -1,12 +1,16 @@
-import { session } from './neo4j';
-import * as neo4j from 'neo4j-driver';
 import { BadRequest } from 'http-errors';
-import is from '@sindresorhus/is';
+import Joi from 'joi';
+import { neo4j, session } from './neo4j';
 
 export interface SearchModulesQuery {
   pageSize?: number;
   page?: number;
 }
+
+const inputValidator = Joi.object<SearchModulesQuery>({
+  pageSize: Joi.number().greater(0).default(10),
+  page: Joi.number().min(0).default(0),
+});
 
 export interface SearchModulesResponse {
   moduleName: string;
@@ -30,18 +34,18 @@ const MODULE_LIB_AND_REPO = `
   LIMIT $limit
 `
 
-export async function searchModules({ page, pageSize }: SearchModulesQuery): Promise<SearchModulesResponse[]> {
-  if (!is.number(page) || page < 0) {
-    throw new BadRequest(`Page must non-negative integer but got ${page}`);
-  }
-  if (!is.number(pageSize) || pageSize <= 0) {
-    throw new BadRequest(`Page Size must positive integer but got ${pageSize}`);
+export async function searchModules(input: SearchModulesQuery): Promise<SearchModulesResponse[]> {
+  const { value, error } = inputValidator.validate(input);
+  if (error) {
+    throw new BadRequest(error.message);
   }
 
-  const res = await session.run(MODULE_LIB_AND_REPO, {
+  const { page, pageSize } = value as SearchModulesQuery;
+
+  const { records } = await session.run(MODULE_LIB_AND_REPO, {
     limit: neo4j.int(pageSize),
     skip: neo4j.int(pageSize * page),
   });
 
-  return res.records.map(r => r.toObject() as SearchModulesResponse);
+  return records.map(r => r.toObject() as SearchModulesResponse);
 }

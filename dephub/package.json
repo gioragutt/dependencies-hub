@@ -32,6 +32,7 @@
     "device-detector": "^1.0.2",
     "express": "4.17.1",
     "http-errors": "^1.8.0",
+    "joi": "^17.2.0",
     "lodash.escaperegexp": "^4.1.2",
     "morgan": "^1.10.0",
     "neo4j-driver": "^4.1.1",
