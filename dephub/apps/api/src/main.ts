@@ -19,8 +19,8 @@ app.get(
     searchModules({
       page: Number(page || '0'),
       pageSize: Number(pageSize || '10'),
-    })
-  )
+    }),
+  ),
 );
 
 const port = environment.port || 3333;

@@ -28,7 +28,8 @@
           { "sourceTag": "*", "onlyDependOnLibsWithTags": ["*"] }
         ]
       }
-    ]
+    ],
+    "comma-dangle": ["error", "always-multiline"]
   },
   "overrides": [
     {
