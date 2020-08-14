@@ -7,8 +7,11 @@ import { createApiEndpoint as _ } from '@dephub/express-utils';
 import express from 'express';
 import { searchModules } from './app/searchModules';
 import { environment } from './environments/environment';
+import morgan from 'morgan';
 
 const app = express();
+
+app.use(morgan('dev'));
 
 app.get(
   '/modules',
