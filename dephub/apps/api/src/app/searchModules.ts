@@ -34,7 +34,7 @@ export async function searchModules({ page, pageSize }: SearchModulesQuery): Pro
   if (!is.number(page) || page < 0) {
     throw new BadRequest(`Page must non-negative integer but got ${page}`);
   }
-  if (!is.number(pageSize) || page <= 0) {
+  if (!is.number(pageSize) || pageSize <= 0) {
     throw new BadRequest(`Page Size must positive integer but got ${pageSize}`);
   }
 
