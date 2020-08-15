@@ -1,6 +1,8 @@
-import { cypherNode, mapToCreateQueries, relation, toMapFrom, collectParameters } from '@dephub/cypher-utils';
-import { QueryResult, Session } from 'neo4j-driver';
-import { ScrapeResult } from './scrape-result';
+import { cypherNode } from '@dephub/cypher-utils';
+import { Session } from 'neo4j-driver';
+import * as extract from './extract-cypher-from-scrape-result';
+import { RepositoryNode } from './neo4j-models';
+import { ScrapeResult } from './scraped-data-models';
 
 export async function insertScrapeResult(
   {
@@ -10,65 +12,54 @@ export async function insertScrapeResult(
     gitVersionType,
   }: ScrapeResult,
   session: Session,
-): Promise<QueryResult> {
+): Promise<void> {
 
-  const repoNode = cypherNode('Repository', { name: repositoryName });
+  const repoNode = cypherNode<RepositoryNode>('Repository', { name: repositoryName });
 
-  const moduleNodes = toMapFrom(modules, m => cypherNode('Module', { name: m.moduleName }));
+  const moduleNodes = extract.moduleNodes(modules);
+  const moduleVersionNodes = extract.moduleVersionNodes(modules, gitVersion, gitVersionType);
+  const versionOfRelations = extract.versionOfRelations(modules, moduleNodes, moduleVersionNodes);
+  const residesInRelations = extract.residesInRelations(modules, moduleNodes, repoNode);
 
-  const moduleVersionNodes = toMapFrom(modules, m => cypherNode('ModuleVersion', {
-    name: m.moduleName,
-    version: m.version,
-    gitVersion,
-    gitVersionType,
-  }));
+  const allDependencies = modules.flatMap(m => m.dependencies);
+  const dependenciesModuleNodes = extract.dependenciesModuleNodes(allDependencies);
+  const dependenciesModuleVersionNodes = extract.dependenciesModuleVersionNodes(allDependencies);
 
-  const versionOfRelations = toMapFrom(modules, m => {
-    const moduleNode = moduleNodes.get(m);
-    const moduleVersionNode = moduleVersionNodes.get(m);
-    return relation('VERSION_OF', moduleVersionNode, moduleNode);
-  });
+  const dependsOnLibraryRelations = extract.dependsOnLibrariesRelations(
+    modules, moduleVersionNodes, dependenciesModuleVersionNodes);
 
-  const residesInRelations = toMapFrom(modules, m => {
-    const moduleNode = moduleNodes.get(m);
-    return relation('RESIDES_IN', moduleNode, repoNode, {
-      pathInRepo: m.pathInRepo,
-    });
-  });
-
-  const query = `CREATE
-  // ==== Repository ===
-
-  ${repoNode.createQuery},
-
-  // ==== Modules ====
-
-  ${mapToCreateQueries(moduleNodes)},
-
-  // ==== Module Version ====
-
-  ${mapToCreateQueries(moduleVersionNodes)},
-
-  // ==== VERSION_OF ====
-
-  ${mapToCreateQueries(versionOfRelations)},
-
-  // ==== RESIDES_IN ==== 
-
-  ${mapToCreateQueries(residesInRelations)};
-  `;
-
-  const params = collectParameters(
+  const allData = [
     repoNode,
     moduleNodes,
     moduleVersionNodes,
     versionOfRelations,
     residesInRelations,
-  );
+    dependenciesModuleNodes,
+    dependenciesModuleVersionNodes,
+    dependsOnLibraryRelations,
+  ].flatMap(item => {
+    if (Array.isArray(item)) {
+      return item;
+    }
+    if (item instanceof Map) {
+      return [...item.values()];
+    }
+    return [item];
+  });
 
-  console.log(query);
-  console.log(params);
+  const tx = session.beginTransaction();
 
-  return null;
-  // return session.run(query, params);
+  console.time('run');
+  await Promise.all(allData.map(item =>
+    tx.run(item.mergeQuery, item.paramsForQuery)));
+  console.timeEnd('run');
+
+  try {
+    console.time('commit');
+    await tx.commit();
+    console.timeEnd('commit');
+  } catch (e) {
+    console.log(e);
+    return tx.rollback();
+  }
 }

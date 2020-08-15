@@ -1,21 +1,22 @@
-import { HasCreateQuery, prepareParamsForCreateQuery } from './create-query';
+import { HasMergeQuery, prepareParamsForCreateQuery } from './merge-query';
 import { Params, newNodeId } from './utils';
 
-export interface CypherNode extends HasCreateQuery {
+export interface CypherNode<P extends Params> extends HasMergeQuery<P> {
   readonly nodeName: string;
   readonly label: string;
 }
 
-export function cypherNode(label: string, params: Params): CypherNode {
+export function cypherNode<P extends Params>(label: string, params?: P): CypherNode<P> {
   const nodeName = `${label.toLowerCase()}_${newNodeId(label)}`;
-  const { paramsForCreateQuery, paramsInQueryString } = prepareParamsForCreateQuery(nodeName, params);
+  const { paramsForQuery, paramsInQueryString } = prepareParamsForCreateQuery(nodeName, params);
 
   const createQuery = `(${nodeName}:${label}${paramsInQueryString})`;
 
   return {
     nodeName,
     label,
-    paramsForCreateQuery,
-    createQuery,
+    paramsForQuery,
+    mergeQuery: `MERGE ${createQuery}`,
+    originalParams: params,
   };
 }

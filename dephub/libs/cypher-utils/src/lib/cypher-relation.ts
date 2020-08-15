@@ -1,24 +1,37 @@
-import { HasCreateQuery, prepareParamsForCreateQuery } from './create-query';
+import { HasMergeQuery, prepareParamsForCreateQuery } from './merge-query';
 import { CypherNode } from './cypher-node';
-import { newNodeId } from './utils';
+import { collectParameters, newNodeId, Params } from './utils';
 
-export interface CypherRelation extends HasCreateQuery {
+export interface CypherRelation<P extends Params> extends HasMergeQuery<P> {
   nodeName: string;
-  paramsForCreateQuery: Record<string, any>;
 }
 
-export function relation(
+export function cypherRelation<P extends Params = {}>(
   relationName: string,
-  fromNode: CypherNode,
-  toNode: CypherNode,
-  params?: Record<string, any>,
-): CypherRelation {
+  fromNode: CypherNode<any>,
+  toNode: CypherNode<any>,
+  params?: P,
+): CypherRelation<P> {
   const nodeName = `${relationName.toLowerCase()}_${newNodeId(relationName)}`;
-  const { paramsForCreateQuery, paramsInQueryString } = prepareParamsForCreateQuery(nodeName, params);
+  const { paramsForQuery, paramsInQueryString } = prepareParamsForCreateQuery<P>(nodeName, params);
+
+  const updateStatement = paramsInQueryString
+    ? `SET ${nodeName} += ${paramsInQueryString}`
+    : '// No params to update';
 
   return {
     nodeName,
-    paramsForCreateQuery,
-    createQuery: `(${fromNode.nodeName})-[${nodeName}:${relationName}${paramsInQueryString}]->(${toNode.nodeName})`,
+    originalParams: params,
+    paramsForQuery: collectParameters(
+      paramsForQuery,
+      fromNode.paramsForQuery,
+      toNode.paramsForQuery,
+    ),
+    mergeQuery: `
+      ${fromNode.mergeQuery}
+      ${toNode.mergeQuery}
+      MERGE (${fromNode.nodeName})-[${nodeName}:${relationName}]->(${toNode.nodeName})
+      ${updateStatement}
+    `,
   };
 }

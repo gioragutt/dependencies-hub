@@ -5,7 +5,7 @@
 
 import { createApiEndpoint as _ } from '@dephub/express-utils';
 import express from 'express';
-import { searchModules } from './app/searchModules';
+import { searchModules } from './app/search-modules';
 import { environment } from './environments/environment';
 import morgan from 'morgan';
 
