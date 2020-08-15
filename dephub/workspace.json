@@ -83,6 +83,63 @@
           }
         }
       }
+    },
+    "scrape-gradle-from-tfs-repo": {
+      "root": "libs/scrape-gradle-from-tfs-repo",
+      "sourceRoot": "libs/scrape-gradle-from-tfs-repo/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@nrwl/linter:lint",
+          "options": {
+            "linter": "eslint",
+            "tsConfig": [
+              "libs/scrape-gradle-from-tfs-repo/tsconfig.lib.json",
+              "libs/scrape-gradle-from-tfs-repo/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/scrape-gradle-from-tfs-repo/**/*"
+            ]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/scrape-gradle-from-tfs-repo/jest.config.js",
+            "tsConfig": "libs/scrape-gradle-from-tfs-repo/tsconfig.spec.json",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "cypher-utils": {
+      "root": "libs/cypher-utils",
+      "sourceRoot": "libs/cypher-utils/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@nrwl/linter:lint",
+          "options": {
+            "linter": "eslint",
+            "tsConfig": [
+              "libs/cypher-utils/tsconfig.lib.json",
+              "libs/cypher-utils/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!libs/cypher-utils/**/*"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/cypher-utils/jest.config.js",
+            "tsConfig": "libs/cypher-utils/tsconfig.spec.json",
+            "passWithNoTests": true
+          }
+        }
+      }
     }
   },
   "cli": {

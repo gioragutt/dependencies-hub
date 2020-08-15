@@ -32,7 +32,7 @@ const MODULE_LIB_AND_REPO = `
     m.name as moduleName, isLibrary, repo.name as repoName, rel.path as pathInRepo
   SKIP $skip
   LIMIT $limit
-`
+`;
 
 export async function searchModules(input: SearchModulesQuery): Promise<SearchModulesResponse[]> {
   const { value, error } = inputValidator.validate(input);

@@ -12,12 +12,16 @@
     "target": "es2015",
     "module": "esnext",
     "typeRoots": ["node_modules/@types"],
-    "lib": ["es2017", "dom"],
+    "lib": ["ESNext", "dom"],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@dephub/express-utils": ["libs/express-utils/src/index.ts"]
+      "@dephub/express-utils": ["libs/express-utils/src/index.ts"],
+      "@dephub/scrape-gradle-from-tfs-repo": [
+        "libs/scrape-gradle-from-tfs-repo/src/index.ts"
+      ],
+      "@dephub/cypher-utils": ["libs/cypher-utils/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

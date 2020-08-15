@@ -2,7 +2,7 @@ import HttpError from 'standard-http-error';
 import escapeRegExp from 'lodash.escaperegexp';
 import { Request, Handler, ErrorRequestHandler } from 'express';
 
-const stackFileRegex = new RegExp(`${escapeRegExp(process.cwd())}`, 'ig')
+const stackFileRegex = new RegExp(`${escapeRegExp(process.cwd())}`, 'ig');
 
 export function createApiEndpoint<T>(fn: (req: Request) => T | Promise<T>): Handler {
   return (req, res, next) => Promise.resolve()
@@ -24,13 +24,13 @@ export const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
     err.httpErrorCode ||
     err.status ||
     (err instanceof HttpError && err.code) ||
-    500
+    500;
   res.status(status).send({
     message: err.message,
     stack:
       process.env.NODE_ENV === 'production'
         ? undefined
         : (err.stack || '').replace(stackFileRegex, ''),
-  })
-  res.emit('error', err) // pino.js handle error log in this way
-}
+  });
+  res.emit('error', err); // pino.js handle error log in this way
+};
