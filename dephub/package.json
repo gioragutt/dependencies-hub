@@ -37,7 +37,7 @@
     "morgan": "^1.10.0",
     "neo4j-driver": "^4.1.1",
     "standard-http-error": "^2.0.1",
-    "url-parse": "^1.4.7"
+    "url-parse": "^1.5.8"
   },
   "devDependencies": {
     "@nrwl/eslint-plugin-nx": "10.0.10",
