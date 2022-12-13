@@ -30,7 +30,7 @@
     "@sindresorhus/is": "^3.1.0",
     "cypher-query-builder": "^5.0.4",
     "device-detector": "^1.0.2",
-    "express": "4.17.1",
+    "express": "4.17.3",
     "http-errors": "^1.8.0",
     "joi": "^17.2.0",
     "lodash.escaperegexp": "^4.1.2",
